@@ -1,6 +1,7 @@
 /*
 SPDX-License-Identifier: Apache-2.0
 */
+/* My chaincode. */
 
 package main
 
@@ -149,4 +150,3 @@ func main() {
 		fmt.Printf("Error starting fabcar chaincode: %s", err.Error())
 	}
 }
-
