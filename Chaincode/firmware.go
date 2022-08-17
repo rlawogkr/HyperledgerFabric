@@ -32,10 +32,9 @@ type QueryResult struct {
 	Record *Firmware
 }
 
-// InitLedger adds a base set of cars to the ledger
-func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	return nil
-}
+//func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
+//	return nil
+//}
 
 // CreateCar adds a new car to the world state with given details
 func (s *SmartContract) CreateFirmware(ctx contractapi.TransactionContextInterface, firmwareNumber string, id string, name string, version string, path string, date string, serviceNumberId string) error {
@@ -54,6 +53,7 @@ func (s *SmartContract) CreateFirmware(ctx contractapi.TransactionContextInterfa
 }
 
 // QueryCar returns the car stored in the world state with given id
+/////////////////////////////////////////////////////////////////////////
 func (s *SmartContract) QueryFirmware(ctx contractapi.TransactionContextInterface, firmwareNumber string) (*Firmware, error) {
 	firmwareAsBytes, err := ctx.GetStub().GetState(firmwareNumber)
 
@@ -70,6 +70,8 @@ func (s *SmartContract) QueryFirmware(ctx contractapi.TransactionContextInterfac
 
 	return firmware, nil
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 // QueryAllCars returns all cars found in world state
 func (s *SmartContract) QueryAllFirmwares(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
@@ -115,6 +117,49 @@ func (s *SmartContract) ChangeFirmwareVersion(ctx contractapi.TransactionContext
 	firmwareAsBytes, _ := json.Marshal(firmware)
 
 	return ctx.GetStub().PutState(firmwareNumber, firmwareAsBytes)
+}
+
+func (s *SmartContract) ChangeName(ctx contractapi.TransactionContextInterface, firmwareNumber string, newName string) error {
+	firmware, err := s.QueryFirmware(ctx, firmwareNumber)
+
+	if err != nil {
+		return err
+	}
+
+	firmware.Name = newName
+
+	firmwareAsBytes, _ := json.Marshal(firmware)
+
+	return ctx.GetStub().PutState(firmwareNumber, firmwareAsBytes)
+}
+
+func (s *SmartContract) ChangePath(ctx contractapi.TransactionContextInterface, firmwareNumber string, newPath string) error {
+	firmware, err := s.QueryFirmware(ctx, firmwareNumber)
+
+	if err != nil {
+		return err
+	}
+
+	firmware.Path = newPath
+
+	firmwareAsBytes, _ := json.Marshal(firmware)
+
+	return ctx.GetStub().PutState(firmwareNumber, firmwareAsBytes)
+}
+
+//////////////////////////////////////////////////////////
+func (s *SmartContract) DeleteFirmware(ctx contractapi.TransactionContextInterface, firmwareNumber string) error {
+	exists, err := s.QueryFirmware(ctx, firmwareNumber)
+
+	if err != nil {
+		return err
+	}
+
+	if exists == nil {
+		return fmt.Errorf("Firmware %s does not exist", firmwareNumber)
+	}
+
+	return ctx.GetStub().DelState(firmwareNumber)
 }
 
 func main() {
