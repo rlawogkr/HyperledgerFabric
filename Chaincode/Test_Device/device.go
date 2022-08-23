@@ -105,6 +105,16 @@ func (s *SmartContract) QueryAllFirmwares(ctx contractapi.TransactionContextInte
 	return results, nil
 }
 
+//check there have firmware or not.
+func (s *SmartContract) FirmwareExists(ctx contractapi.TransactionContextInterface, firmwareNumber string) (bool, error) {
+	firmwareAsBytes, err := ctx.GetStub().GetState(firmwareNumber)
+	if err != nil {
+		return false, fmt.Errorf("failed to read from world state: %v", err)
+	}
+
+	return firmwareAsBytes != nil, nil
+}
+
 // ChangeCarOwner updates the owner field of car with given id in world state
 func (s *SmartContract) ChangeFirmwareVersion(ctx contractapi.TransactionContextInterface, firmwareNumber string, newVersion string) error {
 	firmware, err := s.QueryFirmware(ctx, firmwareNumber)
