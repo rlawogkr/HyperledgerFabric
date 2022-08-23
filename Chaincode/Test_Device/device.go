@@ -11,12 +11,12 @@ import (
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
-// SmartContract provides functions for managing a car
+// SmartContract provides functions for managing firmware
 type SmartContract struct {
 	contractapi.Contract
 }
 
-// Car describes basic details of what makes up a car
+// Car describes basic details of what makes up firmware
 type Firmware struct {
 	ID              string `json:"id"`
 	Name            string `json:"name"`
@@ -32,7 +32,7 @@ type QueryResult struct {
 	Record *Firmware
 }
 
-// InitLedger adds a base set of cars to the ledger
+// InitLedger adds a base set of firmwares to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	return nil
 }
@@ -74,7 +74,7 @@ func (s *SmartContract) QueryFirmware(ctx contractapi.TransactionContextInterfac
 
 //////////////////////////////////////////////////////////////////////////
 
-// QueryAllCars returns all cars found in world state
+// QueryAllFirmwares returns all fimwares found in world state
 func (s *SmartContract) QueryAllFirmwares(ctx contractapi.TransactionContextInterface) ([]QueryResult, error) {
 	startKey := ""
 	endKey := ""
@@ -115,7 +115,7 @@ func (s *SmartContract) FirmwareExists(ctx contractapi.TransactionContextInterfa
 	return firmwareAsBytes != nil, nil
 }
 
-// ChangeCarOwner updates the owner field of car with given id in world state
+
 func (s *SmartContract) ChangeFirmwareVersion(ctx contractapi.TransactionContextInterface, firmwareNumber string, newVersion string) error {
 	firmware, err := s.QueryFirmware(ctx, firmwareNumber)
 
